@@ -54,8 +54,12 @@ def yahooFinanceNav(webpage):
 
 
 """
-Puts Data from tables into a hashmap/dictionary so that it is directly accessible by iterate or name.
+Puts Data from tables into a hashtable/dictionary so that it is directly accessible by iterate or name.
 Takes an input of a list that consists of html table elements.
+
+Removable sections are any lines of code that use the variable "i". This was introduced since my objective was to
+only output the 2nd row of data from each table. Otherwise this function will return a hashtable that contains the data
+of all tables.
 """
 def hashData(tables):
     data = {}
