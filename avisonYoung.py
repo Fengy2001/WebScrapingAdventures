@@ -8,11 +8,20 @@ def initScrape(hyperlink):
         browser = playwright.chromium.launch()
         page = browser.new_page()
         page.goto(hyperlink)
+        page = accessInnerHTML(page)
         playwrightToStr = page.content
         htmlStr = playwrightToStr()
         webpage = BeautifulSoup(htmlStr, 'html.parser')
         browser.close()
         return webpage
+    
+
+
+def accessInnerHTML(webpage):
+    innerHTML = webpage.wait_for_selector("iframe")
+    innerHTML = innerHTML.content_frame()
+    return innerHTML
+
 
 
 """
@@ -21,8 +30,7 @@ Which is strange since my html says that the data should all be contained in thi
 """
 def navToData(webpage):
     dataSet = []
-    for data in webpage.find_all("div", class_="js-listing-container py-2"):
-        print("wow!")
+    for data in webpage.find_all("div", class_="col-12"):
         dataSet.append(data)
     return dataSet
 
@@ -34,19 +42,20 @@ def getTitle(data):
 
 
 def getLink(data):
-    dataSet = []
-    for data in data.find_all('a'):
-        dataSet.append(data)
-    return dataSet
+    links = []
+    for link in data:
+        hyperlink = link.find('a')
+        if hyperlink is not None:
+            links.append(hyperlink)
+            print(hyperlink.get('href'))
+    return links
 
 
 
 def main():
     webpage = initScrape('https://www.avisonyoung.ca/properties?saleOrLease=sale&propertyType=&searchText=calgary')
     data = navToData(webpage)
-    print(data)
-    #links = getLink(data)
-    #print(len(links))
+    links = getLink(data)
 
 
 main()
