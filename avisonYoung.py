@@ -102,6 +102,7 @@ def outputData(listings):
         textFile.write("\n")
         textFile.write(titles + " : " + links)
         textFile.write("\n")
+    textFile.close()
 
 
 
