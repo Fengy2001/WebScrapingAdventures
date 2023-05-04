@@ -24,22 +24,6 @@ def initScrape(hyperlink):
 
 
 """
-Finds the tag that you want to obtain.
-takes inputs:
-    htmlTag - the tag you want to find
-    htmlClass - the class associated with the tag. Use "" when specific class tags aren't needed.
-"""
-def findTag(webpage, htmlTag, htmlClass):
-    if htmlTag == "":
-        print("Null HTML tag was used")
-    elif htmlClass == "":
-        return webpage.find_all(htmlTag)
-    else:
-        return webpage.find_all(htmlTag, htmlClass)
-
-
-
-"""
 Function that uses a crude non-adaptive method to access data from tables. Only works for yahoo keystatistic websites.
 Takes the input of a
     - beautifulsoup object parsed with html.parser
@@ -88,6 +72,7 @@ def main():
     webpage = initScrape(websiteLink)
     tables = yahooFinanceNav(webpage)
     data = hashData(tables)
+
 
     
 """
