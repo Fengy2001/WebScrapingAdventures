@@ -4,10 +4,14 @@ from bs4 import BeautifulSoup
 
 
 """
-Initial scraping begins, using playwright, the webpage is opened.
-Once opened the accessInnerHTML function is called to access the inner DOCTYPE.
-Once obtained, beautiful soup scrapes the innerHTML and allowing for data scraping to begin.
-The function then returns the beautifulsoup Object.
+initScrape Scrapes the HTML of the webpage, then invokes accessInnerHTML to 
+obtain the innerHTML for beautifulsoup. Allowing access to the inner DOCTYPE.
+
+Args:
+    hyperlink: the link of the website
+
+Returns:
+    A beautiful soup object that contains the inner DOCTYPE
 """
 def initScrape(hyperlink):
     with sync_playwright() as playwright:
@@ -24,8 +28,14 @@ def initScrape(hyperlink):
 
 
 """
-accessInnerHTML is a function that takes one input of the form of a playwright object. It navigates
-to the DOCTYPE nested inside the outer html and returns the whole inner HTML as a playwright object.
+accessInnerHTML takes a playwright object and finds the iframe that contains the inner DOCTYPE
+stored inside the current HTML.
+
+Args:
+    webpage: a playwright object
+
+Returns:
+    The inner HTML.
 """
 def accessInnerHTML(webpage):
     innerHTML = webpage.wait_for_selector("iframe")
@@ -35,8 +45,14 @@ def accessInnerHTML(webpage):
 
 
 """
-Issue is currently with this method, the method currently returns nothing. 
-Which is strange since my html says that the data should all be contained in this div class.
+navToData prunes the unessecary HTML from the inner DOCTYPE, such that the
+only the items in the listings remains.
+
+Args:
+    webpage: a beautifulSoup object
+
+Returns:
+    An array of listings in the form of beautifulsoup HTML.
 """
 def navToData(webpage):
     dataSet = []
@@ -47,9 +63,14 @@ def navToData(webpage):
 
 
 """
-This function takes one input and is in the form of a navigated soup object.
-The function then looks through all the navigated objects and looks for a h5 tag which contains
-the title of the property. These are then scraped and the results are returned in the form of an array.
+getTitle takes the navigated/pruned data and accesses the HTML tag that 
+contains the title of each listing.
+
+Args:
+    data: pruned beautifulsoup objects
+
+Returns:
+    An array that contains the titles of each listing.
 """
 def getTitle(data):
     titles = []
@@ -63,9 +84,14 @@ def getTitle(data):
 
 
 """
-The getLink function takes the input in the form of a navigated soup object.
-The function then looks through all the navigated objects and looks for a tags. 
-Once found the hyperlink is extracted and stored into an array.
+getLink takes the navigated/pruned data and accesses the HTML tag that 
+contains the hyperlink of each listing.
+
+Args:
+    data: pruned beautifulsoup objects
+
+Returns:
+    An array that contains the hyperlinks of each listing.
 """
 def getLink(data):
     links = []
@@ -79,9 +105,15 @@ def getLink(data):
 
 
 """
-This function takes two inputs both of type arrays.
-Hash data takes the titles and links scraped from the website and 
-associates them together such that they can be accessed by link or by title.
+hashData takes the arrays containing titles and links and combines them into a
+hashtable allowing for access to hyperlinks by titles.
+
+Args:
+    titles: an array containing the titles of listings
+    links:  an array containing the hyperlink of listings
+
+Returns:
+    A hashtable/dictionary containg the titles as keys and hyperlinks as values.
 """
 def hashData(titles, links):
     if (len(titles) == len(links)):
@@ -93,7 +125,15 @@ def hashData(titles, links):
 
 
 """
-This function takes a hashtable/dictionary and outputs them as a text file.
+outputData takes a hashtables of listings and ouputs the title of the property aswell
+as it's associated hyperlink.
+
+Args:
+    listings: a hashtable containing the titles as keys and hyperlinks as values.
+
+Returns:
+    Function does not return anything.
+    However, the function generates a text file containing the ouputs.
 """
 def outputData(listings):
     textFile = open('output.txt', 'w+')
@@ -116,6 +156,7 @@ def main():
     listings = hashData(getTitle(data), getLink(data))
     outputData(listings)
     
+
 
 """
 Call main.
