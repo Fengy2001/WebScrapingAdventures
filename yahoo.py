@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 
-# https://finance.yahoo.com/quote/GME/key-statistics?p=GME
 
 """
 Variable headers is used for userAgent such that the website is accessible.
@@ -14,8 +13,13 @@ headers = {
 
 
 """
-Starts the scraping proccess.
-only input is the link you want to scrape.
+initScrape starts the scraping proccess.
+
+Args:
+    hyperlink:  The link of the website you want to scrape
+
+Returns:
+    A html beautifulSoup object.
 """
 def initScrape(hyperlink):
     response = requests.get(hyperlink, headers=headers)
@@ -24,9 +28,14 @@ def initScrape(hyperlink):
 
 
 """
-Function that uses a crude non-adaptive method to access data from tables. Only works for yahoo keystatistic websites.
-Takes the input of a
-    - beautifulsoup object parsed with html.parser
+yahooFinance is a function that prunes the unwanted HTML such that only the data
+that's of interest remains as in the beautifulsoup object.
+
+Args:
+    webpage:    A html beautifulsoup object
+
+Returns:
+    A list of html beautifulsoup objects that contain the data of each separate table.
 """
 def yahooFinanceNav(webpage):
     tables = []
@@ -38,12 +47,18 @@ def yahooFinanceNav(webpage):
 
 
 """
-Puts Data from tables into a hashtable/dictionary so that it is directly accessible by iterate or name.
-Takes an input of a list that consists of html table elements.
+hashData takes Data from tables and associates them to a hashtable/dictionary so that it is
+accessible by name or iterate.
 
-Removable sections are any lines of code that use the variable "i". This was introduced since my objective was to
-only output the 2nd row of data from each table. Otherwise this function will return a hashtable that contains the data
-of all tables.
+Args:
+    tables: A list of beautifulsoup objects that only contain the html of each table
+
+Returns:
+    A hashtable/dictionary containing the label of the data and the data.
+
+Removable sections are any lines of code that use the variable "i". This was introduced since 
+my objective was to only output the 2nd row of data from each table. Otherwise this function 
+will return a hashtable that contains the data of all tables.
 """
 def hashData(tables):
     data = {}
@@ -65,10 +80,9 @@ def hashData(tables):
 """
 Main function for easier accesiability to functions.
 Main end with a dictionary/hashtable that contains the data of the tables.
-Thus, allowing for easy access to data.
 """
 def main():
-    websiteLink = "https://finance.yahoo.com/quote/GME/key-statistics?p=GME" #str(input("Paste the link: "))
+    websiteLink = "https://finance.yahoo.com/quote/GME/key-statistics?p=GME"
     webpage = initScrape(websiteLink)
     tables = yahooFinanceNav(webpage)
     data = hashData(tables)
