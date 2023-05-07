@@ -7,4 +7,4 @@ yahoo.py uses bs4 & requests libraries.
 
 avisonYoung uses bs4 & playwright libraries.
 
-All code created was for self learning.
+All code created was for learning purposes.
